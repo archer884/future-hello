@@ -18,9 +18,10 @@ fn main() {
 fn read_name() -> io::Result<String> {
     use std::time::Duration;
 
+    let error_message = "timeout elapsed";
     let result = ReadLine::new()
         .select(Timeout::new(Duration::from_secs(5), || {
-            io::Error::new(io::ErrorKind::Other, "timeout elapsed".to_string())
+            io::Error::new(io::ErrorKind::Other, error_message)
         }))
         .wait();
 
