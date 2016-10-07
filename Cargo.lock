@@ -2,13 +2,13 @@
 name = "future-hello"
 version = "0.1.0"
 dependencies = [
- "futures 0.1.0 (git+https://github.com/alexcrichton/futures-rs)",
+ "futures 0.1.2 (git+https://github.com/alexcrichton/futures-rs)",
 ]
 
 [[package]]
 name = "futures"
-version = "0.1.0"
-source = "git+https://github.com/alexcrichton/futures-rs#d5b6ff696c9912c0bf56b54715b3ee0bffba59fc"
+version = "0.1.2"
+source = "git+https://github.com/alexcrichton/futures-rs#79e2d9c88dafbc516ea80ed3997ab53d481f7471"
 dependencies = [
  "log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -19,5 +19,5 @@ version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [metadata]
-"checksum futures 0.1.0 (git+https://github.com/alexcrichton/futures-rs)" = "<none>"
+"checksum futures 0.1.2 (git+https://github.com/alexcrichton/futures-rs)" = "<none>"
 "checksum log 0.3.6 (registry+https://github.com/rust-lang/crates.io-index)" = "ab83497bf8bf4ed2a74259c1c802351fcd67a65baa86394b6ba73c36f4838054"

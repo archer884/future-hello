@@ -1,12 +1,6 @@
 extern crate futures;
 
-mod input;
-mod timeout;
-
-use futures::Future;
-use input::ReadLine;
 use std::io;
-use timeout::Timeout;
 
 fn main() {
     match read_name() {
@@ -16,17 +10,40 @@ fn main() {
 }
 
 fn read_name() -> io::Result<String> {
+    use futures::Future;
+    use std::thread;
     use std::time::Duration;
 
-    let error_message = "timeout elapsed";
-    let result = ReadLine::new()
-        .select(Timeout::new(Duration::from_secs(5), || {
-            io::Error::new(io::ErrorKind::Other, error_message)
-        }))
-        .wait();
+    let timeout = {
+        let (c, p) = futures::oneshot();
+        thread::spawn(|| {
+            thread::sleep(Duration::from_secs(5));
+            c.complete(Err(io::Error::new(
+                io::ErrorKind::Other,
+                "Timeout elapsed"
+            )));
+        });
 
-    match result {
-        Ok((name, _)) => Ok(name),
-        Err((e, _)) => Err(e),
+        p
+    };
+
+    let input = {
+        let (c, p) = futures::oneshot();
+        thread::spawn(|| {
+            use std::io::BufRead;
+
+            let input = io::stdin();
+            let mut input = input.lock();
+            let mut buf = String::new();
+
+            c.complete(input.read_line(&mut buf).map(|_| buf));
+        });
+
+        p
+    };
+
+    match input.select(timeout).wait() {
+        Err(_) => unreachable!(),
+        Ok((complete, _)) => complete,
     }
 }
